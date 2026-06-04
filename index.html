@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EventHub — Event Management System</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ================= AUTH SCREEN ================= -->
+<div id="authScreen" class="auth-screen">
+  <div class="auth-card glass">
+    <div class="auth-brand">
+      <h1>🚀 EventHub</h1>
+      <p>Discover. Book. Enjoy.</p>
+    </div>
+
+    <!-- LOGIN -->
+    <form id="loginForm" class="auth-form">
+      <h2>Welcome Back</h2>
+      <div class="field">
+        <input type="email" id="loginEmail" placeholder="Email" />
+        <small class="err" id="loginEmailErr"></small>
+      </div>
+      <div class="field pwd">
+        <input type="password" id="loginPassword" placeholder="Password" />
+        <span class="toggle-pwd" data-target="loginPassword">👁</span>
+        <small class="err" id="loginPasswordErr"></small>
+      </div>
+      <button type="submit" class="btn-primary">Login</button>
+      <p class="switch">No account? <a href="#" id="goSignup">Sign up</a></p>
+    </form>
+
+    <!-- SIGNUP -->
+    <form id="signupForm" class="auth-form hidden">
+      <h2>Create Account</h2>
+      <div class="field">
+        <input type="text" id="signupName" placeholder="Full Name" />
+        <small class="err" id="signupNameErr"></small>
+      </div>
+      <div class="field">
+        <input type="email" id="signupEmail" placeholder="Email" />
+        <small class="err" id="signupEmailErr"></small>
+      </div>
+      <div class="field pwd">
+        <input type="password" id="signupPassword" placeholder="Password" />
+        <span class="toggle-pwd" data-target="signupPassword">👁</span>
+        <small class="err" id="signupPasswordErr"></small>
+      </div>
+      <button type="submit" class="btn-primary">Sign Up</button>
+      <p class="switch">Have an account? <a href="#" id="goLogin">Login</a></p>
+    </form>
+  </div>
+</div>
+
+<!-- ================= MAIN APP ================= -->
+<div id="app" class="app hidden">
+
+  <!-- NAVBAR -->
+  <nav class="navbar glass">
+    <div class="nav-logo">🚀 EventHub</div>
+    <div class="nav-links" id="navLinks">
+      <a data-page="dashboard" class="active">Dashboard</a>
+      <a data-page="events">Events</a>
+      <a data-page="favorites">Favorites</a>
+      <a data-page="calendar">Calendar</a>
+      <a data-page="analytics">Analytics</a>
+      <a data-page="achievements">Achievements</a>
+    </div>
+    <div class="nav-actions">
+      <button id="themeToggle" class="icon-btn" title="Toggle theme">🌙</button>
+      <span class="nav-user" id="navUser"></span>
+      <button id="logoutBtn" class="btn-ghost">Logout</button>
+      <button id="burger" class="icon-btn burger">☰</button>
+    </div>
+  </nav>
+
+  <!-- PAGES -->
+  <main class="content">
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="page active">
+      <div class="hero glass fade-in">
+        <h1 id="welcomeMsg">Welcome 👋</h1>
+        <p>Here's what's happening with your events today.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card glass slide-up"><span class="stat-ico">📅</span><h3 id="statTotal">0</h3><p>Total Events</p></div>
+        <div class="stat-card glass slide-up"><span class="stat-ico">🎟</span><h3 id="statReg">0</h3><p>Registered</p></div>
+        <div class="stat-card glass slide-up"><span class="stat-ico">❤️</span><h3 id="statFav">0</h3><p>Favorites</p></div>
+        <div class="stat-card glass slide-up"><span class="stat-ico">⏳</span><h3 id="statUp">0</h3><p>Upcoming</p></div>
+      </div>
+
+      <div class="dash-cols">
+        <div class="dash-box glass">
+          <h2>Recent Activity</h2>
+          <ul id="recentActivity" class="activity-list"></ul>
+        </div>
+        <div class="dash-box glass">
+          <h2>🧠 You May Also Like</h2>
+          <div id="recommendations" class="reco-grid"></div>
+        </div>
+      </div>
+
+      <div class="dash-box glass">
+        <h2>👀 Recently Viewed</h2>
+        <div id="recentlyViewed" class="reco-grid"></div>
+      </div>
+    </section>
+
+    <!-- EVENTS -->
+    <section id="events" class="page">
+      <div class="toolbar glass">
+        <input type="text" id="searchInput" placeholder="🔍 Search by name, organizer, venue..." />
+        <select id="filterCategory">
+          <option value="">All Categories</option>
+        </select>
+        <select id="filterPrice">
+          <option value="">All Prices</option>
+          <option value="free">Free</option>
+          <option value="paid">Paid</option>
+        </select>
+        <select id="filterUpcoming">
+          <option value="">All Dates</option>
+          <option value="upcoming">Upcoming Only</option>
+        </select>
+        <select id="sortBy">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="priceHigh">Highest Price</option>
+          <option value="priceLow">Lowest Price</option>
+          <option value="popular">Most Popular</option>
+        </select>
+      </div>
+      <div id="eventGrid" class="event-grid"></div>
+    </section>
+
+    <!-- FAVORITES -->
+    <section id="favorites" class="page">
+      <h1 class="page-title">❤️ My Favorites</h1>
+      <div id="favGrid" class="event-grid"></div>
+    </section>
+
+    <!-- CALENDAR -->
+    <section id="calendar" class="page">
+      <h1 class="page-title">📅 Event Calendar</h1>
+      <div class="calendar-wrap glass">
+        <div class="cal-header">
+          <button id="prevMonth" class="icon-btn">‹</button>
+          <h2 id="calTitle"></h2>
+          <button id="nextMonth" class="icon-btn">›</button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+      <div class="dash-box glass">
+        <h2 id="calDayTitle">Events</h2>
+        <div id="calDayEvents" class="event-grid"></div>
+      </div>
+    </section>
+
+    <!-- ANALYTICS -->
+    <section id="analytics" class="page">
+      <h1 class="page-title">📊 Analytics Dashboard</h1>
+      <div class="stats-grid">
+        <div class="stat-card glass"><h3 id="anTotal">0</h3><p>Total Events</p></div>
+        <div class="stat-card glass"><h3 id="anReg">0</h3><p>Registered</p></div>
+        <div class="stat-card glass"><h3 id="anFav">0</h3><p>Favorites</p></div>
+        <div class="stat-card glass"><h3 id="anUp">0</h3><p>Upcoming</p></div>
+        <div class="stat-card glass"><h3 id="anPop">-</h3><p>Top Category</p></div>
+        <div class="stat-card glass"><h3 id="anMonth">0</h3><p>This Month Regs</p></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-box glass"><h3>📈 Registration Trend</h3><canvas id="trendChart" width="400" height="240"></canvas></div>
+        <div class="chart-box glass"><h3>📊 Category Distribution</h3><canvas id="barChart" width="400" height="240"></canvas></div>
+        <div class="chart-box glass"><h3>🥧 Category Pie</h3><canvas id="pieChart" width="400" height="240"></canvas></div>
+      </div>
+    </section>
+
+    <!-- ACHIEVEMENTS -->
+    <section id="achievements" class="page">
+      <h1 class="page-title">🏆 Achievements</h1>
+      <div id="badgeGrid" class="badge-grid"></div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ================= MODALS ================= -->
+
+<!-- EVENT DETAIL MODAL -->
+<div id="detailModal" class="modal">
+  <div class="modal-card glass modal-anim">
+    <button class="close-modal">✕</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<!-- BOOKING / SEAT MODAL -->
+<div id="bookingModal" class="modal">
+  <div class="modal-card glass modal-anim">
+    <button class="close-modal">✕</button>
+    <h2 id="bookEventName"></h2>
+    <p class="muted" id="bookSeatInfo"></p>
+    <div class="seat-legend">
+      <span><i class="seat-dot avail"></i> Available</span>
+      <span><i class="seat-dot booked"></i> Booked</span>
+      <span><i class="seat-dot sel"></i> Selected</span>
+    </div>
+    <div class="screen">SCREEN / STAGE</div>
+    <div id="seatMap" class="seat-map"></div>
+    <div class="booking-summary glass">
+      <p>Selected Seats: <strong id="selSeats">0</strong></p>
+      <p>Price per ticket: <strong id="perPrice">₹0</strong></p>
+      <p>Total: <strong id="totalPrice">₹0</strong></p>
+    </div>
+    <button id="proceedPay" class="btn-primary" disabled>Proceed to Payment</button>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div id="paymentModal" class="modal">
+  <div class="modal-card glass modal-anim">
+    <button class="close-modal">✕</button>
+    <h2>💳 Payment</h2>
+    <div class="order-summary glass" id="orderSummary"></div>
+    <div class="pay-methods">
+      <label><input type="radio" name="pay" value="Credit Card" checked /> Credit Card</label>
+      <label><input type="radio" name="pay" value="Debit Card" /> Debit Card</label>
+      <label><input type="radio" name="pay" value="UPI" /> UPI</label>
+      <label><input type="radio" name="pay" value="Net Banking" /> Net Banking</label>
+    </div>
+    <div class="card-fields">
+      <input type="text" placeholder="Card / UPI ID" />
+      <input type="text" placeholder="Name on Card" />
+      <div class="inline">
+        <input type="text" placeholder="MM/YY" />
+        <input type="text" placeholder="CVV" />
+      </div>
+    </div>
+    <button id="payNow" class="btn-primary">Pay Now</button>
+  </div>
+</div>
+
+<!-- TICKET MODAL -->
+<div id="ticketModal" class="modal">
+  <div class="modal-card glass modal-anim">
+    <button class="close-modal">✕</button>
+    <div class="success-check">✅</div>
+    <h2 style="text-align:center">Booking Confirmed!</h2>
+    <div id="ticket" class="ticket"></div>
+    <button id="downloadTicket" class="btn-primary">⬇ Download Ticket</button>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toastBox" class="toast-box"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
